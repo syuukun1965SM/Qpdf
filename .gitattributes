@@ -1,0 +1,4 @@
+# バッチファイルの文字コードはShift-JIS。
+# git diffでの文字化け対策
+
+*.bat	diff=sjis
