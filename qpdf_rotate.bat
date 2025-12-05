@@ -25,14 +25,16 @@ echo  ‚±‚ê‚É‚æ‚èŽw’è‚µ‚½pdfƒtƒ@ƒCƒ‹‚©‚çƒtƒ@ƒCƒ‹‘S‘ÌA‚Ü‚½‚ÍŽw’èƒy[ƒW‚ð‰ñ“]‚³‚¹‚
 echo.
 
 
-rem ƒ†[ƒU‚É‚æ‚é‘ÎÛpdfƒtƒ@ƒCƒ‹–¼“ü—Í—v‹ˆ—•”
+
 :INPUT_LOOP
+rem ƒ†[ƒU‚É‚æ‚é‘ÎÛpdfƒtƒ@ƒCƒ‹–¼“ü—Í—v‹ˆ—•”
 set Op_Num=
 set /P filename="‰ñ“]‚³‚¹‚épdfƒtƒ@ƒCƒ‹–¼‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢: "
 
 
-rem Žw’èƒtƒ@ƒCƒ‹‚Ì‘¶Ý—L–³Šm”Fˆ—•”
+
 :EXIST_CHECK
+rem Žw’èƒtƒ@ƒCƒ‹‚Ì‘¶Ý—L–³Šm”Fˆ—•”
 if not exist "%filename%" (
     echo Žw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹ "%filename%" ‚Í‘¶Ý‚µ‚Ü‚¹‚ñB
 	set Op_Num=1
@@ -40,8 +42,9 @@ if not exist "%filename%" (
 )
 
 
+
+:PAGE_SELECTION
 rem ƒ†[ƒU‚É‚æ‚é‰ñ“]‘ÎÛ(ƒtƒ@ƒCƒ‹‘S‘ÌEŒÂ•Ê‚Ìƒy[ƒW)Žw’èˆ—•”
-:SELECTION
 set SEL_Pages=
 
 echo.
@@ -55,58 +58,61 @@ echo ’) ‘¶Ý‚µ‚È‚¢ƒy[ƒW‚ðŽw’è‚·‚é‚ÆƒGƒ‰[‚É‚È‚è‚Ü‚·B
 echo.
 
 set /p SEL_Pages="ƒtƒ@ƒCƒ‹‘S‘ÌA‚Ü‚½‚Íƒy[ƒW‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢ :  "
-if "%SEL_Pages%"=="" set SEL_Pages%=1-z
+if "%SEL_Pages%"=="" set SEL_Pages=1-z
 
 
 
-rem qpdf.exe‚ð—p‚¢‚½ƒpƒXƒ[ƒhÝ’èó‹µ”»’fˆ—•”
-rem for~do •”‚ÍCopilot’ñˆÄ‚Ìˆ—Bqpdf‚ª“f‚«o‚·ƒƒbƒZ[ƒW’†‚Éhnot encrypted"‚ª‚ ‚ê‚ÎˆÃ†‰»‚³‚ê‚Ä‚¢‚é‚Æ”»’f‚·‚é
-rem ˆö‚Ý‚ÉAqpdf‚Ì”»’èo—Í‚ÍŒÜŒŽå¢‚­‚È‚é‚Ì‚Å”ñ•\Ž¦(>nul)‚ÉÝ’è
-:ENCRYPTION_CHECK
+:ROTATION_ANGLE
+rem Žw’è‚µ‚½”ÍˆÍ‚Ì‰ñ“]Šp“xE•ûŒüŽw’èˆ—•”
+set ROT_Ang=
 
-set Encrypt_Status=
-
-for /f "tokens=*" %%A in ('qpdf.exe --show-encryption "%filename%"') do (
-    echo %%A | find /i "not encrypted" >nul && echo Žw’è‚³‚ê‚½ƒtƒ@ƒCƒ‹ "%filename%" ‚ÍˆÃ†‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB && set "Encrypt_Status=1" && set "Op_Num=2" && goto :CONTINUATION_CHECK
-)
-
-
-rem qpdf.exe‚ð—p‚¢‚½ƒpƒXƒ[ƒh‰ðœˆ—•”
-rem ƒ†[ƒU‚É‚æ‚éƒpƒXƒ[ƒh“ü—Í—v‹
-:MAIN_BODY
 echo.
-set Op_Num=3
-set /P Pword="ƒpƒXƒ[ƒh‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢: "
+echo  ==‰ñ“]•ûŒüŽw’è•û–@==
+echo    1) ŽžŒv‰ñ‚è‚Ü‚½‚Í”½ŽžŒv‰ñ‚è‚É90“x‚Ý‚Å‚Ì‰ñ“]•ûŒüEŠp“xŽw’è‚ª‰Â”\B
+echo    2) Šp“x‚Íâ‘ÎŠp“x‚Æ‚È‚éBŒ»ó‚©‚ç‚Ì‘Š‘ÎŠp“x‚Å‚Í‚È‚¢‚Ì‚Å’ˆÓ‚Ì‚±‚ÆB
+echo    3) 90“x‚ðŽw’è‚µ‚½ê‡AŽžŒv‰ñ‚è‚É‰¡Œü‚«‚Æ‚È‚éBB
+echo    4) -90“x‚ðŽw’è‚µ‚½ê‡A”½ŽžŒv‰ñ‚è‚É‰¡Œü‚«(270“xŽw’è‚Æ“¯‚¶)‚Æ‚È‚éB
+echo.
+echo  yd—vz‘I‘ð‰Â”\‚ÈŠp“x‚Í0, 90, 180, 270(-90)‚Ì‚Ý‚Æ‚È‚éB‚±‚êˆÈŠO‚ÍƒGƒ‰[‚É‚È‚éB
+echo.
 
-rem ƒpƒXƒ[ƒh‚ª“ü—Í‚³‚ê‚½‚©‚ÌŠm”F
-if "%Pword%"=="" (
-	echo.
-	echo ƒpƒXƒ[ƒh‚ª–³“ü—Í‚Å‚·BÝ’è‚µ‚Ä‚­‚¾‚³‚¢B
-	choice /C YN /M "‚»‚ê‚Æ‚àˆ—‚ð’†’f‚µ‚Ü‚·‚©H (Y/N)"
-	if ERRORLEVEL 2 goto :MAIN_BODY
-	if ERRORLEVEL 1 goto :END
+choice /C 1234 /M "‰ñ“]Šp“x‚ð(1:0“xA2:90“xA3:180“xA4:270“x(-90“x))‚©‚ç‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢"
+rem set /p ROT_Ang="‰ñ“]Šp“x‚ð(0“xA90“xA180“xA270“x(-90“x))‚©‚ç‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢ :  "
+rem echo "%ERRORLEVEL%"
+if ERRORLEVEL 4 (
+	set ROT_Ang=270
+	goto :MAIN_BODY
 )
-
-rem ƒpƒXƒ[ƒh‰ðœˆ—
-qpdf.exe --decrypt --password=%PWord% %filename% --replace-input >nul 2>&1
-if "%ERRORLEVEL%"=="2" (
-	echo.
-	echo “ü—Í‚³‚ê‚½ƒpƒXƒ[ƒh‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñB
-	goto :CONTINUATION_CHECK
-	set Op_Num=3
+if ERRORLEVEL 3 (
+	set ROT_Ang=180
+	goto :MAIN_BODY
 )
-set Op_Num=4
-set PWord=
+if ERRORLEVEL 2 (
+	set ROT_Ang=90
+	goto :MAIN_BODY
+)
+if ERRORLEVEL 1 set ROT_Ang=0
 
 
-rem ˆ—Œp‘±‚ÌˆÓŽvŠm”F•”
+
+:MAIN_BODY
+rem qpdf.exe‚ð—p‚¢‚½Žw’èƒy[ƒW‚ÌŽw’èŠp“xE•ûŒü‚Ö‚Ì‰ñ“]ˆ—•”
+rem echo "%ROT_Ang%"
+rem echo "%SEL_Pages%"
+
+qpdf.exe --rotate=%ROT_Ang%:%SEL_Pages% %filename% --replace-input
+set Op_Num=2
+
+
 :CONTINUATION_CHECK
+rem ˆ—Œp‘±‚ÌˆÓŽvŠm”F•”
 set filename=
 echo.
 choice /C YN /M "•Êƒtƒ@ƒCƒ‹‚ðŽw’èE‰ñ“]ˆ—‚µ‚Ü‚·‚©H (Y/N)"
 echo.
 if ERRORLEVEL 2 goto :END
 if ERRORLEVEL 1 goto :INPUT_LOOP
+
 
 
 rem ƒNƒ[ƒWƒ“ƒOˆ—•”
@@ -116,16 +122,9 @@ if %Op_Num% EQU 1 (
 )
 
 if "%Op_Num%"=="2" (
-	set Show_str="Žw’èƒtƒ@ƒCƒ‹‚ÍˆÃ†‰»‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ‚Å‚µ‚½B’†’f‚µ‚Ü‚µ‚½B"
-)
-
-if "%Op_Num%"=="3" (
-	set Show_str="•œ†‰»ˆ—‚ð’†’f‚µ‚Ü‚µ‚½B"
-)
-
-if "%Op_Num%"=="4" (
 	set Show_str="‚â‚è‹‚°‚Ü‚µ‚½B"
 )
+
 echo.
 echo +-------------------------------------------------------+
 echo  %Show_str%
