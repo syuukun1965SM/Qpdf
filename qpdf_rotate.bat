@@ -19,8 +19,8 @@ echo.
 echo  ==使い方==
 echo    1) ページを回転させたいファイル名を手入力する。
 echo    2) 回転させたいページを指定する (無指定時はファイル全体を対象にする)。
-echo	3) 回転方向と角度を指定する (無指定時は時計回りに90度回転する)。
-echo	4) 出力ファイル名を指定する (無指定時は上書き保存する)。
+echo    3) 回転方向と角度を指定する (無指定時は時計回りに90度回転する)。
+echo    4) 出力ファイル名を指定する (無指定時は上書き保存する)。
 echo  これにより指定したpdfファイルからファイル全体、または指定ページを回転させた状態で保存される。
 echo.
 
@@ -28,7 +28,7 @@ echo.
 rem ユーザによる対象pdfファイル名入力要求処理部
 :INPUT_LOOP
 set Op_Num=
-set /P filename="パスワード解除するpdfファイル名を入力してください: "
+set /P filename="回転させるpdfファイル名を入力してください: "
 
 
 rem 指定ファイルの存在有無確認処理部
@@ -38,6 +38,25 @@ if not exist "%filename%" (
 	set Op_Num=1
     goto :CONTINUATION_CHECK
 )
+
+
+rem ユーザによる回転対象(ファイル全体・個別のページ)指定処理部
+:SELECTION
+set SEL_Pages=
+
+echo.
+echo ==指定方法==
+echo    1) ファイル全体の回転指定はEnterキィを押下するだけ。
+echo    2) 連続ページ指定の場合は開始ページと終了ページをハイホンで記述: 例) 5-9
+echo    3) 離散ページ指定の場合は対象ページ毎にカンマで区切って記述: 例) 1,5,9
+echo    4) 連続ページと離散ページ指定の場合は上記2項、3項の複合形: 例) 1,3,5-9
+echo    5) 全頁を範囲指定して特定ページを除外する方法: 例) 1-z,x5,6 や 1-z,x7-9
+echo 注) 存在しないページを指定するとエラーになります。
+echo.
+
+set /p SEL_Pages="ファイル全体、またはページを指定してください :  "
+if "%SEL_Pages%"=="" set SEL_Pages%=1-z
+
 
 
 rem qpdf.exeを用いたパスワード設定状況判断処理部
@@ -84,7 +103,7 @@ rem 処理継続の意思確認部
 :CONTINUATION_CHECK
 set filename=
 echo.
-choice /C YN /M "別ファイルを指定・復号化処理しますか？ (Y/N)"
+choice /C YN /M "別ファイルを指定・回転処理しますか？ (Y/N)"
 echo.
 if ERRORLEVEL 2 goto :END
 if ERRORLEVEL 1 goto :INPUT_LOOP
