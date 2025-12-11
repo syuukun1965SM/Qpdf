@@ -4,7 +4,6 @@ rem 機能概要: --pagesオプションを用いた各種機能選択用バッチファイル"qpdf_pages.b
 rem 選択肢[1]: ページ抽出 → 対象ファイル内の必要なページのみを抽出し、別ファイルに出力する
 rem (注: このバッチファイル単体での使用は想定していない)
 
-echo 選択肢1を選定
 
 rem 初期化
 set In_File=
@@ -13,8 +12,9 @@ set SEL_Pages=
 set SEL_Pages_Arr=
 set Op_Num=0
 
+
 echo.
-echo ==やり方==
+echo ==ページ抽出のやり方==
 echo 対象となるpdfファイルを指定する。
 echo 出力ファイル名を設定する。
 echo 抽出するページ(個別のページ、ページ範囲)を指定する。
@@ -49,7 +49,7 @@ if not "%Out_File%"=="" (
 	if exist "%Out_File%" (
 		echo.
 		echo 指定されたファイル "%Out_File%" は存在します。
-		choice /C 123 /M "1: 上書き、2: 別ファイル指定、3: 終了)から選択してください"
+		choice /C 123 /M "(1: 上書き、2: 別ファイル指定、3: 終了)から選択してください"
 		echo.
 		if ERRORLEVEL 3 goto :END
 		if ERRORLEVEL 2 goto :SEL_OUTPUT_FILE
@@ -114,7 +114,8 @@ qpdf.exe %In_File% --pages . %SEL_Pages_Arr% -- %Out_File%
 rem 終了処理部
 echo.
 echo +-------------------------------------------------------+
-echo  終了します。
+echo  指定されたページ %SEL_Pages_Arr% を %Out_File% に出力しました。
+echo  呼出し元に戻ります。
 echo +-------------------------------------------------------+
 rem PAUSE
 echo.
