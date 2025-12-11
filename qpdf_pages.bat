@@ -26,97 +26,45 @@ rem ユーザ入力値判定処理部
 set SEL_Nr=
 choice /C 1234 /M "処理を(1: ページ抽出、2: ページ削除、3: ファイル結合、4: ページ結合)から選択してください"
 rem set /p ROT_Ang="回転角度を(0度、90度、180度、270度(-90度))から選択してください :  "
-rem echo "%ERRORLEVEL%"
+echo "%ERRORLEVEL%"
 if ERRORLEVEL 4 (
 	set SEL_Nr=4
-	goto :Page_Bind
+	call qpdf_pages_04.bat
+	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 3 (
 	set SEL_Nr=3
-	goto :File_Bond
+	call qpdf_pages_03.bat
+	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 2 (
 	set SEL_Nr=2
-	goto :Page_Del
+	call qpdf_pages_02.bat
+	goto :CONTINUATION_CHECK
 )
-if ERRORLEVEL 1 set SEL_Nr=1
+if ERRORLEVEL 1 (
+	set SEL_Nr=1
+	call qpdf_pages_01.bat
+)
 
 
-:Page_Sel
-echo 1番を選択
-exit /b
-
-
-:Page_Del
-echo 2番を選択
-exit /b
-
-
-
-:File_Bond
-set In_File01=
-set Target_Files=
-set Op_Num=0
-
-echo 3番を選択
+:CONTINUATION_CHECK
+rem 処理継続の意思確認部
 echo.
-echo ==やり方==
-echo ファイルとファイルの結合なので最低二つは必須。
-echo ファイルを一つ指定したらエンタキィを押下。
-echo 必要ファイルを全て指定し終わったらもう一回エンタキィを押下する。
-echo 結合ファイルはoutput.pdfとして出力される。
+choice /C YN /M "別の処理をしますか？ (Y/N)"
 echo.
-
-:File_Bond01
-set In_File=
-
-set /p In_File="ファイルを指定してください(終了時はEnterのみ):  "
-
-rem ファイル指定終了判定処理部
-if "%In_File%"=="" (
-	if %Op_Num% LSS 2 (
-		echo 指定ファイル数が不足しています。2つ以上の指定が必須。
-		echo.
-		goto :File_Bond01
-	)
-rem	echo ファイル指定終了。
-	goto :Bond
-)
-
-rem 指定ファイルの存在有無確認処理部
-if not exist "%In_File%" (
-    echo 指定されたファイル "%In_File%" は存在しません。
-    echo.
-	goto :File_Bond01
-)
-
-rem ベースファイル設定部
-if %Op_Num% EQU 0 set In_File01=%In_File%
-
-rem 結合用ファイル追記処理部
-set Target_Files=%Target_Files% %In_File%
-set /A Op_Num +=1
-rem echo 入力ファイル名は %In_File% です。
-rem echo 指定されたファイル群は %Target_Files% です。
-rem echo ループ回数は %Op_Num% です。
-rem echo.
-goto :File_Bond01
+if ERRORLEVEL 2 goto :END
+if ERRORLEVEL 1 goto :INPUT_LOOP
 
 
-:Bond
-rem ファイル結合処理部
-rem echo.
-rem echo ベースファイルは %In_File01% です。
-rem echo 指定されたファイル群は %Target_Files% です。
-rem echo 指定されたファイル群を結合します。
-rem echo.
 
-rem pause
-qpdf.exe %In_File01% --pages %Target_Files% -- output.pdf
-
-exit /b
-
-
-:Page_Bind
-echo 4番を選択
-exit /b
+:END
+rem 終了処理部
+echo.
+echo +-------------------------------------------------------+
+echo  %Show_str%
+echo  終了します。
+echo +-------------------------------------------------------+
+rem PAUSE
+echo.
+EXIT /b
