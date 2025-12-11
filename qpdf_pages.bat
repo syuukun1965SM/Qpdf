@@ -25,8 +25,7 @@ rem ユーザ入力値判定処理部
 
 set SEL_Nr=
 choice /C 1234 /M "処理を(1: ページ抽出、2: ページ削除、3: ファイル結合、4: ページ結合)から選択してください"
-rem set /p ROT_Ang="回転角度を(0度、90度、180度、270度(-90度))から選択してください :  "
-echo "%ERRORLEVEL%"
+rem echo "%ERRORLEVEL%"
 if ERRORLEVEL 4 (
 	set SEL_Nr=4
 	call %~dp0qpdf_pages_04.bat
@@ -62,7 +61,6 @@ if ERRORLEVEL 1 goto :INPUT_LOOP
 rem 終了処理部
 echo.
 echo +-------------------------------------------------------+
-echo  %Show_str%
 echo  終了します。
 echo +-------------------------------------------------------+
 rem PAUSE
