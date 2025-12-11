@@ -29,22 +29,22 @@ rem set /p ROT_Ang="回転角度を(0度、90度、180度、270度(-90度))から選択してくださ
 echo "%ERRORLEVEL%"
 if ERRORLEVEL 4 (
 	set SEL_Nr=4
-	call qpdf_pages_04.bat
+	call %~dp0qpdf_pages_04.bat
 	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 3 (
 	set SEL_Nr=3
-	call qpdf_pages_03.bat
+	call %~dp0qpdf_pages_03.bat
 	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 2 (
 	set SEL_Nr=2
-	call qpdf_pages_02.bat
+	call %~dp0qpdf_pages_02.bat
 	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 1 (
 	set SEL_Nr=1
-	call qpdf_pages_01.bat
+	call %~dp0qpdf_pages_01.bat
 )
 
 
