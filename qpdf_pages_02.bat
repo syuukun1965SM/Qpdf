@@ -10,6 +10,7 @@ set In_File=
 set Out_File=
 set SEL_Pages=
 set SEL_Pages_Arr=
+set SEL_Pages_Arr_x=
 set Op_Num=0
 
 
@@ -85,9 +86,11 @@ rem	echo ページ指定終了。
 
 rem 選択ページ追記処理部
 if %Op_Num% EQU 0 (
-	set SEL_Pages_Arr=x%SEL_Pages%
+	set SEL_Pages_Arr=%SEL_Pages%
+	set SEL_Pages_Arr_x=x%SEL_Pages%
 ) else (
-	set SEL_Pages_Arr=%SEL_Pages_Arr%,x%SEL_Pages%
+	set SEL_Pages_Arr=%SEL_Pages_Arr%,%SEL_Pages%
+	set SEL_Pages_Arr_x=%SEL_Pages_Arr_x%,x%SEL_Pages%
 )
 set /A Op_Num +=1
 rem set SEL_Pages_Arr=%SEL_Pages_Arr% %SEL_Pages%
@@ -107,7 +110,7 @@ rem echo 指定されたページ範囲は %SEL_Pages_Arr% です。
 rem echo 指定されたページ範囲を削除して %Out_File% に出力します。
 rem echo.
 rem pause
-qpdf.exe %In_File% --pages . 1-z,%SEL_Pages_Arr% -- %Out_File%
+qpdf.exe %In_File% --pages . 1-z,%SEL_Pages_Arr_x% -- %Out_File%
 
 
 :END
