@@ -18,19 +18,22 @@ echo    5) 処理終了。
 echo.
 
 choice /C 12345 /M "処理を(1:暗号化、2:復号化、3:ファイル回転、4:ページ処理、５:終了)から選択してください"
-echo "%ERRORLEVEL%"
-PAUSE
+rem echo "%ERRORLEVEL%"
+rem PAUSE
 
 if ERRORLEVEL 5 goto :END
 
 if ERRORLEVEL 4 (
 	call %~dp0qpdf_pages.bat
+	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 3 (
 	call %~dp0qpdf_rotate.bat
+	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 2 (
 	call %~dp0qpdf_decrypt.bat
+	goto :CONTINUATION_CHECK
 )
 if ERRORLEVEL 1 (
 	call %~dp0qpdf_encrypt.bat
